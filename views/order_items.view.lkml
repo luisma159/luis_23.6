@@ -77,6 +77,6 @@ view: order_items {
 
   measure: count {
     type: count
-    drill_fields: [id]
+    drill_fields: [total_sale_price]
   }
 }
