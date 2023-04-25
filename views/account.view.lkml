@@ -58,8 +58,9 @@ view: account {
     sql: ${TABLE}.name ;;
   }
 
-  measure: count {
-    type: count
+   measure: count {
+     type: count
     drill_fields: [id, name]
-  }
+   }
+
 }
