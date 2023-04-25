@@ -79,4 +79,9 @@ view: order_items {
     type: count
     drill_fields: [id, orders.id, inventory_items.id]
   }
+
+  measure: number_of_products {
+    type: count
+    drill_fields: [id]  # optional
+  }
 }
