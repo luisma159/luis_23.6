@@ -98,7 +98,59 @@ view: users {
     type: count
     drill_fields: [detail*]
   }
+  dimension: datetime_inif {
+    type: date_time
+    sql: DATE_ADD(users.created_at, INTERVAL  DATEDIFF(created_at,"2019-02-11") second);;}
 
+  dimension_group: unif {
+    type: time
+    timeframes: [
+      time_of_day,
+      minute15,
+      hour
+    ]
+    sql: ${datetime_inif} ;;
+
+  }
+  dimension_group: datetime_unified_group {
+    type: time
+    timeframes: [
+      time_of_day,
+      hour,
+      minute15
+    ]
+    sql: ${datetime_inif} ;;
+    convert_tz: no
+  }
+  dimension: period_dimension_unified {
+    sql:
+    {% if date_granularity2._parameter_value == 'hour' %}
+      ${datetime_unified_group_hour}
+    {% elsif date_granularity2._parameter_value == 'minute15' %}
+      ${datetime_unified_group_minute15}
+    {% else %}
+      ${datetime_unified_group_time_of_day}
+    {% endif %} ;;
+    type: date_time
+    html: {{rendered_value | date: "%R"}} ;;
+
+  }
+
+  parameter: date_granularity2 {
+    type: unquoted
+    allowed_value: {
+      label: "Hour"
+      value: "hour"
+    }
+    allowed_value: {
+      label: "15 Minutes"
+      value: "minute15"
+    }
+    allowed_value: {
+      label: "Exact Time"
+      value: "time_of_day"
+    }
+  }
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
